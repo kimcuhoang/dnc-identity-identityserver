@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 
@@ -24,6 +26,10 @@ namespace DncIds4.IdentityServer.Data
                     Scopes =
                     {
                         new Scope("ApiResource.Read", "Read Only access to ApiResource")
+                    },
+                    ApiSecrets =
+                    {
+                        new Secret("secret".Sha256())
                     }
                 }, 
             };
@@ -35,7 +41,17 @@ namespace DncIds4.IdentityServer.Data
                 {
                     ClientId = "ApiResource",
                     AllowAccessTokensViaBrowser = true,
-                    AllowedGrantTypes = GrantTypes.Implicit
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+                    AllowedScopes = {
+                        "ApiResource",
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    },
+                    AllowedCorsOrigins = {"http://localhost:5002"}
                 }
             };
 
@@ -46,7 +62,11 @@ namespace DncIds4.IdentityServer.Data
                 {
                     SubjectId = "sub1",
                     Username = "test.user",
-                    Password = "test123"
+                    Password = "test123",
+                    //Claims = new List<Claim>
+                    //{
+                    //    new Claim("ApiResource", "ApiResource")
+                    //}
                 }, 
             };
     }
