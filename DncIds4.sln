@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__", "__", "{0E807C77-A67A-4124-9739-DB5ED6D6CDBE}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DncIds4.IdentityServer", "source\DncIds4.IdentityServer\DncIds4.IdentityServer.csproj", "{4B006809-5916-4D0A-A62C-5AD9BC1D4E29}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4B006809-5916-4D0A-A62C-5AD9BC1D4E29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B006809-5916-4D0A-A62C-5AD9BC1D4E29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B006809-5916-4D0A-A62C-5AD9BC1D4E29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B006809-5916-4D0A-A62C-5AD9BC1D4E29}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {24200D8C-28F8-492C-945E-E2033FF5F5EF}
+	EndGlobalSection
+EndGlobal
