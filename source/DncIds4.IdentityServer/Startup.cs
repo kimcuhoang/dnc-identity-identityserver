@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace DncIds4.IdentityServer
 {
@@ -52,6 +54,20 @@ namespace DncIds4.IdentityServer
                 .AddInMemoryApiResources(Database.ApiResources)
                 .AddInMemoryClients(Database.Clients)
                 .AddAspNetIdentity<IdentityUser>();
+
+            services.AddSwaggerGen(opts =>
+            {
+                opts.SwaggerDoc("V1", new OpenApiInfo
+                {
+                    Title = "IdentityServer4",
+                    Version = "V1"
+                });
+
+                //Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                opts.IncludeXmlComments(xmlPath);
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -61,7 +77,18 @@ namespace DncIds4.IdentityServer
             var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             dbContext.Database.Migrate();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/V1/swagger.json", "IdentityServer4");
+            });
+
+            app.UseRouting();
             app.UseIdentityServer();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }
