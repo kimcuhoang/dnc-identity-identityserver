@@ -4,11 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using DncIds4.IdentityServer.Config;
 using DncIds4.IdentityServer.Data;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,16 +29,42 @@ namespace DncIds4.IdentityServer
             Configuration = configuration;
             this.ConnectionString = this.Configuration.GetConnectionString("Default");
             this.MigrationAssembly = this.GetType().Assembly.GetName().Name;
+            this.IdentityServerConfig = this.Configuration.GetSection("IdentityServerConfig").Get<IdentityServerConfig>();
         }
 
         private string ConnectionString { get; }
         private string MigrationAssembly { get; }
+        private IdentityServerConfig IdentityServerConfig { get; }
 
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(cfg =>
+            {
+                var guestPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .RequireClaim("scope", this.IdentityServerConfig.ApiName)
+                    .Build();
+                cfg.Filters.Add(new AuthorizeFilter(guestPolicy));
+            });
+
+            services
+                .AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddIdentityServerAuthentication(opts =>
+                {
+                    opts.Authority = this.IdentityServerConfig.IdentityServerUrl;
+                    opts.RequireHttpsMetadata = false;
+                    opts.ApiName = this.IdentityServerConfig.ApiName;
+                    opts.ApiSecret = this.IdentityServerConfig.ClientSecret;
+                });
+
+            services.AddAuthorization(opts =>
+            {
+                opts.AddPolicy("For_Admin", policy => { policy.RequireClaim("role", "api::admin"); });
+
+                opts.AddPolicy("For_User", policy => { policy.RequireClaim("role", "api::user"); });
+            });
 
             services.AddDbContext<ApplicationDbContext>(opts =>
                 {

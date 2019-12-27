@@ -23,6 +23,14 @@ namespace DncIds4.IdentityServer.Data
                     "api::admin",
                     "api::user"
                 }), 
+                new IdentityResource("account_management", new []
+                {
+                    "admin",
+                    "manager",
+                    "user",
+                    "account::create",
+                    "account::view"
+                }), 
             };
 
         public static IEnumerable<ApiResource> ApiResources => 
@@ -45,7 +53,22 @@ namespace DncIds4.IdentityServer.Data
                         "api::admin",
                         "api::user"
                     }
-                }, 
+                },
+                new ApiResource("AccountApi", "The API for account management")
+                {
+                    ApiSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+                    UserClaims = {
+                        "role",
+                        "admin",
+                        "user",
+                        "manager",
+                        "account::create",
+                        "account::view"
+                    }
+                },
             };
 
         public static IEnumerable<Client> Clients => 
@@ -67,6 +90,22 @@ namespace DncIds4.IdentityServer.Data
                         IdentityServerConstants.StandardScopes.Profile
                     },
                     AllowedCorsOrigins = {"http://localhost:5002"}
+                },
+                new Client
+                {
+                    ClientId = "AccountApi_Swagger",
+                    AllowAccessTokensViaBrowser = true,
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+                    AllowedScopes = {
+                        "AccountApi",
+                        "role",
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    }
                 }
             };
 
