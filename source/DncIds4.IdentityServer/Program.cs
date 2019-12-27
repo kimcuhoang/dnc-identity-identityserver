@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using System.IO;
 
 namespace DncIds4.IdentityServer
 {
@@ -21,6 +17,19 @@ namespace DncIds4.IdentityServer
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.ConfigureAppConfiguration((webHostBuilderContext, configurationBuilder) =>
+                    {
+                        configurationBuilder.SetBasePath(Directory.GetCurrentDirectory());
+                        configurationBuilder.AddJsonFile("appsettings.json");
+                        configurationBuilder.AddJsonFile($"appsettings.{webHostBuilderContext.HostingEnvironment.EnvironmentName}.json", true);
+                        configurationBuilder.AddEnvironmentVariables();
+                    });
+                    webBuilder.CaptureStartupErrors(true);
+                })// Add a new service provider configuration
+                .UseDefaultServiceProvider((context, options) =>
+                {
+                    options.ValidateScopes = context.HostingEnvironment.IsDevelopment();
+                    options.ValidateOnBuild = true;
                 });
     }
 }

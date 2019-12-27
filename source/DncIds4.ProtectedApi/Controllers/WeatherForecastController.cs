@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -24,6 +25,7 @@ namespace DncIds4.ProtectedApi.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "For_Admin")]
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();
@@ -35,6 +37,17 @@ namespace DncIds4.ProtectedApi.Controllers
             })
             .ToArray();
         }
+
+        [HttpGet("admin")]
+        [Authorize(Policy = "For_Admin")]
+        public IActionResult AdminTest() => Ok("Hello Admin!!!!!!!");
+
+
+        [HttpGet("user")]
+        [Authorize(Policy = "For_User")]
+        public IActionResult UserTest() => Ok("Hello User!!!!!!");
+
+
 
         [HttpGet("user/claims")]
         public IActionResult GetUserClaims()

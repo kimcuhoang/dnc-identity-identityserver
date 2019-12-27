@@ -15,7 +15,14 @@ namespace DncIds4.IdentityServer.Data
             new IdentityResource[]
             {
                 new IdentityResources.OpenId(),
-                new IdentityResources.Profile()
+                new IdentityResources.Profile(),
+                new IdentityResource("role", new []
+                {
+                    "admin",
+                    "user",
+                    "api::admin",
+                    "api::user"
+                }), 
             };
 
         public static IEnumerable<ApiResource> ApiResources => 
@@ -25,11 +32,18 @@ namespace DncIds4.IdentityServer.Data
                 {
                     Scopes =
                     {
-                        new Scope("ApiResource.Read", "Read Only access to ApiResource")
+                        new Scope("protected_api", "Read Only access to ApiResource")
                     },
                     ApiSecrets =
                     {
                         new Secret("secret".Sha256())
+                    },
+                    UserClaims = {
+                        "role",
+                        "admin",
+                        "user",
+                        "api::admin",
+                        "api::user"
                     }
                 }, 
             };
@@ -39,7 +53,7 @@ namespace DncIds4.IdentityServer.Data
             {
                 new Client
                 {
-                    ClientId = "ApiResource",
+                    ClientId = "ApiResource_Swagger",
                     AllowAccessTokensViaBrowser = true,
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets =
@@ -48,6 +62,7 @@ namespace DncIds4.IdentityServer.Data
                     },
                     AllowedScopes = {
                         "ApiResource",
+                        "role",
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
                     },
@@ -61,13 +76,25 @@ namespace DncIds4.IdentityServer.Data
                 new TestUser
                 {
                     SubjectId = "sub1",
-                    Username = "test.user",
-                    Password = "test123",
-                    //Claims = new List<Claim>
-                    //{
-                    //    new Claim("ApiResource", "ApiResource")
-                    //}
-                }, 
+                    Username = "admin",
+                    Password = "admin",
+                    Claims = new List<Claim>
+                    {
+                        new Claim("role", "api::admin")
+                    }
+
+                },
+                new TestUser
+                {
+                    SubjectId = "sub2",
+                    Username = "user",
+                    Password = "user",
+                    Claims = new List<Claim>
+                    {
+                        new Claim("role", "api::user")
+                    }
+
+                },
             };
     }
 }

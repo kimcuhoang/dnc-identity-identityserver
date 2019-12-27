@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using DncIds4.ProtectedApi.Config;
 using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace DncIds4.ProtectedApi
 {
@@ -20,23 +16,40 @@ namespace DncIds4.ProtectedApi
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            this.IdentityServerConfig = this.Configuration.GetSection("IdentityServerConfig").Get<IdentityServerConfig>();
         }
 
         public IConfiguration Configuration { get; }
 
+        private IdentityServerConfig IdentityServerConfig { get; } 
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(cfg => { cfg.Filters.Add(new AuthorizeFilter()); });
+            services.AddControllers(cfg =>
+            {
+                var guestPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .RequireClaim("scope", this.IdentityServerConfig.ApiName)
+                    .Build();
+                cfg.Filters.Add(new AuthorizeFilter(guestPolicy));
+            });
 
             services
                 .AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(opts =>
                 {
-                    opts.Authority = "http://localhost:5001";
+                    opts.Authority = this.IdentityServerConfig.IdentityServerUrl;
                     opts.RequireHttpsMetadata = false;
-                    opts.ApiName = "ApiResource";
-                    opts.ApiSecret = "secret";
+                    opts.ApiName = this.IdentityServerConfig.ApiName;
+                    opts.ApiSecret = this.IdentityServerConfig.ClientSecret;
                 });
+
+            services.AddAuthorization(opts =>
+            {
+                opts.AddPolicy("For_Admin", policy => { policy.RequireClaim("role", "api::admin"); });
+
+                opts.AddPolicy("For_User", policy => { policy.RequireClaim("role", "api::user"); });
+            });
 
             services.AddSwaggerGen(opts =>
             {
@@ -53,8 +66,8 @@ namespace DncIds4.ProtectedApi
                     {
                         Password = new OpenApiOAuthFlow
                         {
-                            AuthorizationUrl = new Uri("http://localhost:5001/connect/authorize", UriKind.Absolute),
-                            TokenUrl = new Uri("http://localhost:5001/connect/token", UriKind.Absolute),
+                            AuthorizationUrl = new Uri(this.IdentityServerConfig.AuthorizeUrl, UriKind.Absolute),
+                            TokenUrl = new Uri(this.IdentityServerConfig.TokenUrl, UriKind.Absolute),
                         }
                     },
                 });
@@ -78,9 +91,8 @@ namespace DncIds4.ProtectedApi
             app.UseSwaggerUI(cfg =>
             {
                 cfg.SwaggerEndpoint("/swagger/V1/swagger.json", "Example of Identity Client");
-                cfg.OAuthClientId("ApiResource");
-                //cfg.OAuthAppName("Swagger");
-                cfg.OAuthClientSecret("secret");
+                cfg.OAuthClientId(this.IdentityServerConfig.ClientId);
+                cfg.OAuthClientSecret(this.IdentityServerConfig.ClientSecret);
             });
 
             app.UseRouting();
