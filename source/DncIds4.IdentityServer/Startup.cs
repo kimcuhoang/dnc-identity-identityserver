@@ -44,6 +44,7 @@ namespace DncIds4.IdentityServer
             {
                 var guestPolicy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
+                    .AddAuthenticationSchemes(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                     .RequireClaim("scope", this.IdentityServerConfig.ApiName)
                     .Build();
                 cfg.Filters.Add(new AuthorizeFilter(guestPolicy));
@@ -61,9 +62,18 @@ namespace DncIds4.IdentityServer
 
             services.AddAuthorization(opts =>
             {
-                opts.AddPolicy("For_Admin", policy => { policy.RequireClaim("role", "api::admin"); });
+                opts.AddPolicy("For_Admin", policy =>
+                {
+                    policy.AddAuthenticationSchemes(IdentityServerAuthenticationDefaults.AuthenticationScheme);
+                    policy.RequireClaim("scope", this.IdentityServerConfig.ApiName);
+                    policy.RequireClaim("role", "api::admin");
+                });
 
-                opts.AddPolicy("For_User", policy => { policy.RequireClaim("role", "api::user"); });
+                opts.AddPolicy("For_User", policy =>
+                {
+                    policy.AddAuthenticationSchemes(IdentityServerAuthenticationDefaults.AuthenticationScheme);
+                    policy.RequireClaim("role", "api::user");
+                });
             });
 
             services.AddDbContext<ApplicationDbContext>(opts =>
@@ -83,7 +93,8 @@ namespace DncIds4.IdentityServer
                 .AddInMemoryIdentityResources(Database.IdentityResources)
                 .AddInMemoryApiResources(Database.ApiResources)
                 .AddInMemoryClients(Database.Clients)
-                .AddAspNetIdentity<IdentityUser>();
+                //.AddAspNetIdentity<IdentityUser>();
+                .AddTestUsers(Database.TestUsers);
 
             services.AddSwaggerGen(opts =>
             {
@@ -97,6 +108,30 @@ namespace DncIds4.IdentityServer
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 opts.IncludeXmlComments(xmlPath);
+
+                opts.AddSecurityDefinition("oauth2ClientCredential", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        ClientCredentials = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri(this.IdentityServerConfig.AuthorizeUrl, UriKind.Absolute),
+                            TokenUrl = new Uri(this.IdentityServerConfig.TokenUrl, UriKind.Absolute),
+                        }
+                    },
+                });
+
+                opts.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "oauth2ClientCredential"}
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
         }
 
@@ -108,13 +143,16 @@ namespace DncIds4.IdentityServer
             dbContext.Database.Migrate();
 
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            app.UseSwaggerUI(cfg =>
             {
-                c.SwaggerEndpoint("/swagger/V1/swagger.json", "IdentityServer4");
+                cfg.SwaggerEndpoint("/swagger/V1/swagger.json", "IdentityServer4");
+                cfg.OAuthClientId(this.IdentityServerConfig.ClientId);
+                cfg.OAuthClientSecret(this.IdentityServerConfig.ClientSecret);
             });
 
             app.UseRouting();
             app.UseIdentityServer();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

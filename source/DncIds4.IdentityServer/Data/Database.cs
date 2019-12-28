@@ -105,6 +105,10 @@ namespace DncIds4.IdentityServer.Data
                         "role",
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
+                    },
+                    Claims =
+                    {
+                        new Claim("role", "api::admin")
                     }
                 }
             };
@@ -121,18 +125,16 @@ namespace DncIds4.IdentityServer.Data
                     {
                         new Claim("role", "api::admin")
                     }
-
                 },
                 new TestUser
                 {
                     SubjectId = "sub2",
                     Username = "user",
-                    Password = "user",
+                    Password = "user123",
                     Claims = new List<Claim>
                     {
                         new Claim("role", "api::user")
                     }
-
                 },
             };
     }
