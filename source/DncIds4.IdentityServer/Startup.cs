@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using DncIds4.IdentityServer.Config;
 using DncIds4.IdentityServer.Data;
@@ -66,7 +67,9 @@ namespace DncIds4.IdentityServer
                 {
                     policy.AddAuthenticationSchemes(IdentityServerAuthenticationDefaults.AuthenticationScheme);
                     policy.RequireClaim("scope", this.IdentityServerConfig.ApiName);
-                    policy.RequireClaim("role", "api::admin");
+                    policy.RequireClaim("iss", this.IdentityServerConfig.IdentityServerUrl);
+                    policy.RequireAssertion(context =>
+                        context.User.HasClaim(x => (x.Type == "role" || x.Type == "client_role") && x.Value == "api::admin"));
                 });
 
                 opts.AddPolicy("For_User", policy =>

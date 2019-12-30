@@ -1,0 +1,8 @@
+{
+  "IdentityServerConfig": {
+    "IdentityServerUrl": "http://localhost:5001",
+    "ApiName": "specify per project",
+    "ClientId": "specify per project",
+    "ClientSecret": "specify per project"
+  }
+}

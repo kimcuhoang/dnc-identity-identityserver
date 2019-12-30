@@ -19,7 +19,17 @@ namespace DncIds4.IdentityServer
                     webBuilder.UseStartup<Startup>();
                     webBuilder.ConfigureAppConfiguration((webHostBuilderContext, configurationBuilder) =>
                     {
-                        configurationBuilder.SetBasePath(Directory.GetCurrentDirectory());
+                        //configurationBuilder.SetBasePath(Directory.GetCurrentDirectory());
+                        //https://andrewlock.net/sharing-appsettings-json-configuration-files-between-projects-in-asp-net-core/
+                        if (webHostBuilderContext.HostingEnvironment.IsDevelopment())
+                        {
+                            var shareSettingsPath = Path.Combine(webHostBuilderContext.HostingEnvironment.ContentRootPath,
+                                                                    "..", "..", 
+                                                                    "sharedSettings.json");
+                            configurationBuilder.AddJsonFile(shareSettingsPath, optional: true);
+                        }
+                        
+                        configurationBuilder.AddJsonFile("sharedSettings.json", optional:true); // When app is published
                         configurationBuilder.AddJsonFile("appsettings.json");
                         configurationBuilder.AddJsonFile($"appsettings.{webHostBuilderContext.HostingEnvironment.EnvironmentName}.json", true);
                         configurationBuilder.AddEnvironmentVariables();
