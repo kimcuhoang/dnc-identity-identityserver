@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using DncIds4.IdentityServer.Config;
 using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 
 namespace DncIds4.IdentityServer.Data
 {
@@ -16,27 +15,13 @@ namespace DncIds4.IdentityServer.Data
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                new IdentityResource("role", new []
-                {
-                    "admin",
-                    "user",
-                    "api::admin",
-                    "api::user"
-                }), 
-                new IdentityResource("account_management", new []
-                {
-                    "admin",
-                    "manager",
-                    "user",
-                    "account::create",
-                    "account::view"
-                }), 
+                new IdentityResource("role", ApiRoleDefinition.RoleTexts)
             };
 
         public static IEnumerable<ApiResource> ApiResources => 
             new ApiResource[]
             {
-                new ApiResource("ApiResource", "The resource Api is protected by IdentityServer4")
+                new ApiResource(ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.ResourceApi], "The resource Api is protected by IdentityServer4")
                 {
                     Scopes =
                     {
@@ -46,28 +31,15 @@ namespace DncIds4.IdentityServer.Data
                     {
                         new Secret("secret".Sha256())
                     },
-                    UserClaims = {
-                        "role",
-                        "admin",
-                        "user",
-                        "api::admin",
-                        "api::user"
-                    }
+                    UserClaims = ApiRoleDefinition.RoleTexts
                 },
-                new ApiResource("AccountApi", "The API for account management")
+                new ApiResource(ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.AccountApi], "The API for account management")
                 {
                     ApiSecrets =
                     {
                         new Secret("secret".Sha256())
                     },
-                    UserClaims = {
-                        "role",
-                        "admin",
-                        "user",
-                        "manager",
-                        "account::create",
-                        "account::view"
-                    }
+                    UserClaims = ApiRoleDefinition.RoleTexts
                 },
             };
 
@@ -84,8 +56,8 @@ namespace DncIds4.IdentityServer.Data
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = {
-                        "ApiResource",
-                        "role",
+                        ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.ResourceApi],
+                        ApiRoleDefinition.RoleClaimText,
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
                     },
@@ -101,14 +73,14 @@ namespace DncIds4.IdentityServer.Data
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = {
-                        "AccountApi",
-                        "role",
+                        ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.AccountApi],
+                        ApiRoleDefinition.RoleClaimText,
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
                     },
                     Claims =
                     {
-                        new Claim("role", "api::admin")
+                        new Claim(ApiRoleDefinition.RoleClaimText, ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.Admin])
                     }
                 }
             };

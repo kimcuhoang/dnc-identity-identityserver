@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
+using DncIds4.IdentityServer.Services;
 
 namespace DncIds4.IdentityServer
 {
@@ -90,8 +91,8 @@ namespace DncIds4.IdentityServer
                 .AddInMemoryIdentityResources(Database.IdentityResources)
                 .AddInMemoryApiResources(Database.ApiResources)
                 .AddInMemoryClients(Database.Clients)
-                //.AddAspNetIdentity<IdentityUser>();
-                .AddTestUsers(Database.TestUsers);
+                .AddAspNetIdentity<IdentityUser>();
+                //.AddTestUsers(Database.TestUsers);
 
             services.AddSwaggerGen(opts =>
             {
@@ -132,6 +133,8 @@ namespace DncIds4.IdentityServer
             });
 
             services.AddHostedService<IdentityDbMigratorHostedService>();
+
+            services.AddScoped<AccountService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using DncIds4.IdentityServer.Services;
+using DncIds4.IdentityServer.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +15,11 @@ namespace DncIds4.IdentityServer.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly AccountService _accountService;
 
-        public AccountController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        public AccountController(AccountService accountService)
         {
-            this._signInManager = signInManager;
-            this._userManager = userManager;
+            this._accountService = accountService;
         }
 
         [HttpGet("ping")]
@@ -34,9 +34,10 @@ namespace DncIds4.IdentityServer.Controllers
 
         [HttpPost("register")]
         [Authorize(Policy = "For_Admin")]
-        public IActionResult Register()
+        public async Task<IActionResult> Register(AccountRegistration model)
         {
-            return Ok("Register Successfully");
+            await this._accountService.AccountRegister(model);
+            return Ok($"Account created at {DateTime.Now}");
         }
     }
 }
