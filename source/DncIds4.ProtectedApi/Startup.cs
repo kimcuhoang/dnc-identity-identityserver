@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
+using DncIds4.ProtectedApi.Securities.Admin;
 
 namespace DncIds4.ProtectedApi
 {
@@ -44,9 +45,15 @@ namespace DncIds4.ProtectedApi
                     opts.ApiSecret = this.IdentityServerConfig.ClientSecret;
                 });
 
+            services.AddSingleton<IAuthorizationHandler, IsAdminClaimAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, IsAdminInScopeAuthorizationHandler>();
             services.AddAuthorization(opts =>
             {
-                opts.AddPolicy("For_Admin", policy => { policy.RequireClaim("role", "api::admin"); });
+                //https://andrewlock.net/custom-authorisation-policies-and-requirements-in-asp-net-core/
+                opts.AddPolicy("For_Admin", policy =>
+                    {
+                        policy.AddRequirements(new IsAdminRequirement(this.IdentityServerConfig.ApiName, "api::admin"));
+                    });
 
                 opts.AddPolicy("For_User", policy => { policy.RequireClaim("role", "api::user"); });
             });

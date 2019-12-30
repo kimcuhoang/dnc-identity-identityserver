@@ -12,3 +12,6 @@ An example of IdentityServer4 and ASP.NET Identity
 ### Update on 30 Dec 2019
 - [Running async tasks on app startup in ASP.NET Core 3.0](https://andrewlock.net/running-async-tasks-on-app-startup-in-asp-net-core-3/)
 - [Sharing appsettings.json configuration files between projects in ASP.NET Core](https://andrewlock.net/sharing-appsettings-json-configuration-files-between-projects-in-asp-net-core/)
+- [Custom authorisation policies and requirements in ASP.NET Core](https://andrewlock.net/custom-authorisation-policies-and-requirements-in-asp-net-core/)
+	- Policies with multiple requirements
+	- Creating a custom requirement
