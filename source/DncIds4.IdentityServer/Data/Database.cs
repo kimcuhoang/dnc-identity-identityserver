@@ -15,7 +15,7 @@ namespace DncIds4.IdentityServer.Data
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                new IdentityResource("role", ApiRoleDefinition.RoleTexts)
+                new IdentityResource(ApiRoleDefinition.RoleClaimText, ApiRoleDefinition.RoleTexts)
             };
 
         public static IEnumerable<ApiResource> ApiResources => 
@@ -23,10 +23,6 @@ namespace DncIds4.IdentityServer.Data
             {
                 new ApiResource(ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.ResourceApi], "The resource Api is protected by IdentityServer4")
                 {
-                    Scopes =
-                    {
-                        new Scope("protected_api", "Read Only access to ApiResource")
-                    },
                     ApiSecrets =
                     {
                         new Secret("secret".Sha256())
@@ -48,7 +44,7 @@ namespace DncIds4.IdentityServer.Data
             {
                 new Client
                 {
-                    ClientId = "ApiResource_Swagger",
+                    ClientId = "ResourceApi_Swagger",
                     AllowAccessTokensViaBrowser = true,
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets =

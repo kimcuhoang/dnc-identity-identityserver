@@ -15,6 +15,8 @@ using System;
 using System.IO;
 using System.Reflection;
 using DncIds4.IdentityServer.Services;
+using IdentityServer4.Services;
+using IdentityServer4.Validation;
 
 namespace DncIds4.IdentityServer
 {
@@ -92,7 +94,6 @@ namespace DncIds4.IdentityServer
                 .AddInMemoryApiResources(Database.ApiResources)
                 .AddInMemoryClients(Database.Clients)
                 .AddAspNetIdentity<IdentityUser>();
-                //.AddTestUsers(Database.TestUsers);
 
             services.AddSwaggerGen(opts =>
             {
@@ -133,8 +134,8 @@ namespace DncIds4.IdentityServer
             });
 
             services.AddHostedService<IdentityDbMigratorHostedService>();
-
             services.AddScoped<AccountService>();
+            services.AddScoped<IProfileService, ProfileService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

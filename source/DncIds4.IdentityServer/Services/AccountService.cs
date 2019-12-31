@@ -49,11 +49,16 @@ namespace DncIds4.IdentityServer.Services
             }
 
             // Add Claims for user
-            var claim = new Claim(ApiRoleDefinition.RoleClaimText,
-                model.IsAdmin
-                    ? ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.Admin]
-                    : ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.User]);
-            var addClaimResult = await this._userManager.AddClaimAsync(identityUser, claim);
+            var claims = new Claim[]
+            {
+                new Claim(ApiRoleDefinition.RoleClaimText,
+                    model.IsAdmin
+                        ? ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.Admin]
+                        : ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.User]),
+                new Claim(ClaimTypes.Email, identityUser.Email),
+                new Claim(ClaimTypes.Name, identityUser.UserName),
+            };
+            var addClaimResult = await this._userManager.AddClaimsAsync(identityUser, claims);
             if (!addClaimResult.Succeeded)
             {
                 var exception = new AccountRegistrationException("Could not add claims to user")

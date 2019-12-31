@@ -15,3 +15,6 @@ An example of IdentityServer4 and ASP.NET Identity
 - [Custom authorisation policies and requirements in ASP.NET Core](https://andrewlock.net/custom-authorisation-policies-and-requirements-in-asp-net-core/)
 	- Policies with multiple requirements
 	- Creating a custom requirement
+
+### Update on 31 Dec 2019
+- [EXTENDING IDENTITY IN IDENTITYSERVER4 TO MANAGE USERS IN ASP.NET CORE](https://damienbod.com/2016/11/18/extending-identity-in-identityserver4-to-manage-users-in-asp-net-core/)

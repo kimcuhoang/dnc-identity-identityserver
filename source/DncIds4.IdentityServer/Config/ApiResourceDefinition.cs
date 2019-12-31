@@ -13,7 +13,7 @@ namespace DncIds4.IdentityServer.Config
         public static Dictionary<Apis, string> ApiResources => new Dictionary<Apis, string>
         {
             { Apis.AccountApi, $"{nameof(Apis.AccountApi)}"},
-            { Apis.ResourceApi, $"{nameof(ApiResources)}" }
+            { Apis.ResourceApi, $"{nameof(Apis.ResourceApi)}" }
         };
     }
 }
