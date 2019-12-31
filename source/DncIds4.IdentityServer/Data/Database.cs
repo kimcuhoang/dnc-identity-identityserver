@@ -1,9 +1,7 @@
 ﻿using DncIds4.IdentityServer.Config;
-using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 
 namespace DncIds4.IdentityServer.Data
@@ -15,7 +13,9 @@ namespace DncIds4.IdentityServer.Data
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                new IdentityResource(ApiRoleDefinition.RoleClaimText, ApiRoleDefinition.RoleTexts)
+                //List of associated user claim types that should be included in the identity token.
+                new IdentityResource(name:ApiRoleDefinition.RoleClaimText, new []{ ApiRoleDefinition.RoleClaimText })
+                
             };
 
         public static IEnumerable<ApiResource> ApiResources => 
@@ -27,7 +27,8 @@ namespace DncIds4.IdentityServer.Data
                     {
                         new Secret("secret".Sha256())
                     },
-                    UserClaims = ApiRoleDefinition.RoleTexts
+                    //List of associated user claim types that should be included in the access token. The claims specified here will be added to the list of claims specified for the API.
+                    UserClaims = { ApiRoleDefinition.RoleClaimText }
                 },
                 new ApiResource(ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.AccountApi], "The API for account management")
                 {
@@ -35,7 +36,7 @@ namespace DncIds4.IdentityServer.Data
                     {
                         new Secret("secret".Sha256())
                     },
-                    UserClaims = ApiRoleDefinition.RoleTexts
+                    UserClaims = { ApiRoleDefinition.RoleClaimText }
                 },
             };
 
@@ -51,11 +52,9 @@ namespace DncIds4.IdentityServer.Data
                     {
                         new Secret("secret".Sha256())
                     },
+                    //By default a client has no access to any resources - specify the allowed resources by adding the corresponding scopes names
                     AllowedScopes = {
-                        ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.ResourceApi],
-                        ApiRoleDefinition.RoleClaimText,
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.ResourceApi]
                     },
                     AllowedCorsOrigins = {"http://localhost:5002"}
                 },
@@ -69,10 +68,7 @@ namespace DncIds4.IdentityServer.Data
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = {
-                        ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.AccountApi],
-                        ApiRoleDefinition.RoleClaimText,
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.AccountApi]
                     },
                     Claims =
                     {

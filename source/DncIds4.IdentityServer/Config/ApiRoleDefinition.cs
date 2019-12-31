@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace DncIds4.IdentityServer.Config
 {
@@ -10,17 +9,13 @@ namespace DncIds4.IdentityServer.Config
         public enum Roles
         {
             Admin,
-            User,
-            Role
+            User
         }
 
         public static Dictionary<Roles, string> ApiRoles => new Dictionary<Roles, string>
         {
             { Roles.Admin, "api::admin" },
-            { Roles.User, "api::user" },
-            { Roles.Role, RoleClaimText }
+            { Roles.User, "api::user" }
         };
-
-        public static string[] RoleTexts => ApiRoles.Select(x => x.Value).ToArray();
     }
 }
