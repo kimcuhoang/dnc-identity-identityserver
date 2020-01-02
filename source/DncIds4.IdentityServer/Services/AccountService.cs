@@ -51,12 +51,13 @@ namespace DncIds4.IdentityServer.Services
             // Add Claims for user
             var claims = new Claim[]
             {
-                new Claim(ApiRoleDefinition.RoleClaimText,
+                new Claim(Constants.IdentityResource.UserScopes, ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.ResourceApi]),
+                new Claim(Constants.IdentityResource.UserRoles,
                     model.IsAdmin
                         ? ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.Admin]
                         : ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.User]),
                 new Claim(ClaimTypes.Email, identityUser.Email),
-                new Claim(ClaimTypes.Name, identityUser.UserName),
+                new Claim(ClaimTypes.Name, identityUser.UserName)
             };
             var addClaimResult = await this._userManager.AddClaimsAsync(identityUser, claims);
             if (!addClaimResult.Succeeded)

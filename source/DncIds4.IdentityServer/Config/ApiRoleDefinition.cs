@@ -4,8 +4,6 @@ namespace DncIds4.IdentityServer.Config
 {
     public class ApiRoleDefinition
     {
-        public static readonly string RoleClaimText = "role";
-
         public enum Roles
         {
             Admin,

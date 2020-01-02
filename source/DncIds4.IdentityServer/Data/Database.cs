@@ -14,8 +14,8 @@ namespace DncIds4.IdentityServer.Data
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
                 //List of associated user claim types that should be included in the identity token.
-                new IdentityResource(name:ApiRoleDefinition.RoleClaimText, new []{ ApiRoleDefinition.RoleClaimText })
-                
+                new IdentityResource(name:Constants.IdentityResource.UserRoles, new []{ Constants.IdentityResource.UserRoles }),
+                new IdentityResource(name:Constants.IdentityResource.UserScopes, new []{ Constants.IdentityResource.UserScopes })
             };
 
         public static IEnumerable<ApiResource> ApiResources => 
@@ -28,7 +28,11 @@ namespace DncIds4.IdentityServer.Data
                         new Secret("secret".Sha256())
                     },
                     //List of associated user claim types that should be included in the access token. The claims specified here will be added to the list of claims specified for the API.
-                    UserClaims = { ApiRoleDefinition.RoleClaimText }
+                    UserClaims =
+                    {
+                        Constants.IdentityResource.UserRoles,
+                        Constants.IdentityResource.UserScopes
+                    }
                 },
                 new ApiResource(ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.AccountApi], "The API for account management")
                 {
@@ -36,7 +40,11 @@ namespace DncIds4.IdentityServer.Data
                     {
                         new Secret("secret".Sha256())
                     },
-                    UserClaims = { ApiRoleDefinition.RoleClaimText }
+                    UserClaims =
+                    {
+                        Constants.IdentityResource.UserRoles,
+                        Constants.IdentityResource.UserScopes
+                    }
                 },
             };
 
@@ -72,7 +80,7 @@ namespace DncIds4.IdentityServer.Data
                     },
                     Claims =
                     {
-                        new Claim(ApiRoleDefinition.RoleClaimText, ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.Admin])
+                        new Claim(Constants.IdentityResource.UserRoles, ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.Admin])
                     }
                 }
             };

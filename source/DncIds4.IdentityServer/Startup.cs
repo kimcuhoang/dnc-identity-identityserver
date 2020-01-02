@@ -1,7 +1,9 @@
 using DncIds4.IdentityServer.Config;
 using DncIds4.IdentityServer.Data;
+using DncIds4.IdentityServer.Services;
 using DncIds4.IdentityServer.StartupTasks;
 using IdentityServer4.AccessTokenValidation;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,9 +16,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
-using DncIds4.IdentityServer.Services;
-using IdentityServer4.Services;
-using IdentityServer4.Validation;
+using DncIds4.IdentityServer.Securities.Admin;
 
 namespace DncIds4.IdentityServer
 {
@@ -65,14 +65,16 @@ namespace DncIds4.IdentityServer
                     policy.AddAuthenticationSchemes(IdentityServerAuthenticationDefaults.AuthenticationScheme);
                     policy.RequireClaim("scope", this.IdentityServerConfig.ApiName);
                     policy.RequireClaim("iss", this.IdentityServerConfig.IdentityServerUrl);
-                    policy.RequireAssertion(context =>
-                        context.User.HasClaim(x => (x.Type == "role" || x.Type == "client_role") && x.Value == "api::admin"));
+                    policy.AddRequirements(
+                        new IsAdminRequirement(ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.Admin]));
                 });
 
                 opts.AddPolicy("For_User", policy =>
                 {
                     policy.AddAuthenticationSchemes(IdentityServerAuthenticationDefaults.AuthenticationScheme);
-                    policy.RequireClaim("role", "api::user");
+                    policy.RequireAssertion(context =>
+                        context.User.HasClaim(x => (x.Type == Constants.IdentityResource.UserRoles || x.Type == $"client_{Constants.IdentityResource.UserRoles}")
+                                                   && x.Value == ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.User]));
                 });
             });
 
@@ -136,6 +138,8 @@ namespace DncIds4.IdentityServer
             services.AddHostedService<IdentityDbMigratorHostedService>();
             services.AddScoped<AccountService>();
             services.AddScoped<IProfileService, ProfileService>();
+            services.AddSingleton<IAuthorizationHandler, IsClientAdminClaimAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, IsUserAdminClaimAuthorizationHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

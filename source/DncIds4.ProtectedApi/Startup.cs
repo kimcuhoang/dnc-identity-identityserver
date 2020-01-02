@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
-using DncIds4.ProtectedApi.Securities.Admin;
 
 namespace DncIds4.ProtectedApi
 {
@@ -31,6 +30,7 @@ namespace DncIds4.ProtectedApi
                 var guestPolicy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
                     .RequireClaim("scope", this.IdentityServerConfig.ApiName)
+                    .RequireClaim(Constants.IdentityResource.UserScopes, this.IdentityServerConfig.ApiName)
                     .Build();
                 cfg.Filters.Add(new AuthorizeFilter(guestPolicy));
             });
@@ -45,17 +45,29 @@ namespace DncIds4.ProtectedApi
                     opts.ApiSecret = this.IdentityServerConfig.ClientSecret;
                 });
 
-            services.AddSingleton<IAuthorizationHandler, IsAdminClaimAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler, IsAdminInScopeAuthorizationHandler>();
             services.AddAuthorization(opts =>
             {
                 //https://andrewlock.net/custom-authorisation-policies-and-requirements-in-asp-net-core/
                 opts.AddPolicy("For_Admin", policy =>
                     {
-                        policy.AddRequirements(new IsAdminRequirement(this.IdentityServerConfig.ApiName, "api::admin"));
+                        policy.RequireAssertion(context =>
+                        {
+                            var isValid =
+                                context.User.HasClaim(claim =>
+                                    claim.Type == Constants.IdentityResource.UserScopes && claim.Value == this.IdentityServerConfig.ApiName);
+
+                            isValid &= context.User.HasClaim(claim => 
+                                    claim.Type == Constants.IdentityResource.UserRoles && claim.Value == Constants.ApiRole.ApiAdmin);
+
+                            return isValid;
+                        });
+
                     });
 
-                opts.AddPolicy("For_User", policy => { policy.RequireClaim("role", "api::user"); });
+                opts.AddPolicy("For_User", policy =>
+                {
+                    policy.RequireClaim(Constants.IdentityResource.UserRoles, Constants.ApiRole.ApiUser);
+                });
             });
 
             services.AddSwaggerGen(opts =>
