@@ -140,6 +140,15 @@ namespace DncIds4.IdentityServer
             services.AddScoped<IProfileService, ProfileService>();
             services.AddSingleton<IAuthorizationHandler, IsClientAdminClaimAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, IsUserAdminClaimAuthorizationHandler>();
+            services.AddCors(opts =>
+            {
+                opts.AddPolicy("Cors_Policy", cfg =>
+                {
+                    cfg.AllowAnyHeader();
+                    cfg.AllowAnyOrigin();
+                    cfg.AllowAnyMethod();
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -151,7 +160,7 @@ namespace DncIds4.IdentityServer
                 cfg.OAuthClientId(this.IdentityServerConfig.ClientId);
                 cfg.OAuthClientSecret(this.IdentityServerConfig.ClientSecret);
             });
-
+            app.UseCors("Cors_Policy");
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthorization();

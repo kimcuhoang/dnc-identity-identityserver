@@ -64,7 +64,7 @@ namespace DncIds4.IdentityServer.Data
                     AllowedScopes = {
                         ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.ResourceApi]
                     },
-                    AllowedCorsOrigins = {"http://localhost:5002"}
+                    //AllowedCorsOrigins = {"http://localhost:5002"}
                 },
                 new Client
                 {
