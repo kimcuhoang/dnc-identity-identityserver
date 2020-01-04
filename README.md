@@ -18,3 +18,7 @@ An example of IdentityServer4 and ASP.NET Identity
 
 ### Update on 31 Dec 2019
 - [EXTENDING IDENTITY IN IDENTITYSERVER4 TO MANAGE USERS IN ASP.NET CORE](https://damienbod.com/2016/11/18/extending-identity-in-identityserver4-to-manage-users-in-asp-net-core/)
+
+### ApiGateway with Ocelot on 04 Jan 2020
+- [Building .NET Core API Gateway with Ocelot](https://medium.com/swlh/building-net-core-api-gateway-with-ocelot-6302c2b3ffc5)
+- [Building Microservices On .NET Core – Part 4 Building API Gateways With Ocelot](https://tinyurl.com/qpxx7f5)

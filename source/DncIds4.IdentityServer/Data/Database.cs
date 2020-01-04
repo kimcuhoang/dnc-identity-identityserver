@@ -46,6 +46,7 @@ namespace DncIds4.IdentityServer.Data
                         Constants.IdentityResource.UserScopes
                     }
                 },
+                new ApiResource(ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.Ocelot], "Ocelot"),
             };
 
         public static IEnumerable<Client> Clients => 
@@ -81,6 +82,18 @@ namespace DncIds4.IdentityServer.Data
                     Claims =
                     {
                         new Claim(Constants.IdentityResource.UserRoles, ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.Admin])
+                    }
+                },
+                new Client
+                {
+                    ClientId = "Ocelot",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+                    AllowedScopes = {
+                        ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.Ocelot]
                     }
                 }
             };

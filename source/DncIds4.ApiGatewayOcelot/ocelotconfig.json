@@ -1,0 +1,31 @@
+﻿{
+  "ReRoutes": [
+    {
+      // protected-api
+      "DownstreamPathTemplete": "/api/WeatherForecast/{everything}",
+      "DownstreamSchema": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "UpstreamPathTemplate": "/api/weather/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
+      "SwaggerKey": "",
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIdAddress}"
+      }
+    }
+  ],
+  "AuthenticationOptions": {
+    "AuthenticationProviderKey": "TestKey",
+    "AllowedScopes": []
+  },
+  "GlobalConfiguration": {
+      "RequestIdKey": "X-Correlation-Id"
+    }
+  }

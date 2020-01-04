@@ -14,6 +14,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DncIds4.IdentityServer", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DncIds4.ProtectedApi", "source\DncIds4.ProtectedApi\DncIds4.ProtectedApi.csproj", "{C95DFF86-C626-4A34-8C84-12392EB3130D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DncIds4.ApiGatewayOcelot", "source\DncIds4.ApiGatewayOcelot\DncIds4.ApiGatewayOcelot.csproj", "{4266FB0F-4448-4942-9C44-69E8B55B6048}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{C95DFF86-C626-4A34-8C84-12392EB3130D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C95DFF86-C626-4A34-8C84-12392EB3130D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C95DFF86-C626-4A34-8C84-12392EB3130D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4266FB0F-4448-4942-9C44-69E8B55B6048}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4266FB0F-4448-4942-9C44-69E8B55B6048}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4266FB0F-4448-4942-9C44-69E8B55B6048}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4266FB0F-4448-4942-9C44-69E8B55B6048}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
