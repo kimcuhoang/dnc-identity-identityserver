@@ -2,23 +2,37 @@
   "ReRoutes": [
     {
       // protected-api
-      "DownstreamPathTemplete": "/api/WeatherForecast/{everything}",
-      "DownstreamSchema": "http",
+      "DownstreamPathTemplate": "/api/WeatherForecast/{everything}",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
           "Port": 5002
         }
       ],
-      "UpstreamPathTemplate": "/api/weather/{everything}",
+      "UpstreamPathTemplate": "/protected-api/weather",
       "UpstreamHttpMethod": [
-        "GET",
-        "POST"
+        "Get"
+      ]
+    },
+    {
+      // protected-api
+      "DownstreamPathTemplate": "/swagger/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
       ],
-      "SwaggerKey": "",
-      "UpstreamHeaderTransform": {
-        "X-Forwarded-For": "{RemoteIdAddress}"
-      }
+      "UpstreamPathTemplate": "/protected-api/swagger/{everything}",
+      "Config": [
+        {
+          "Name": "ProtectedApi",
+          "Version": "V1",
+          "Url": "http://localhost:5002/swagger/V1/swagger.json" 
+        }
+      ]
     }
   ],
   "AuthenticationOptions": {
@@ -26,6 +40,6 @@
     "AllowedScopes": []
   },
   "GlobalConfiguration": {
-      "RequestIdKey": "X-Correlation-Id"
-    }
+    "BaseUrl": "http://localhost:5003"
+  }
   }

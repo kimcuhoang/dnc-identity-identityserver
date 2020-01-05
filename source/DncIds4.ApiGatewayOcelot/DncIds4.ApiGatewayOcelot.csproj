@@ -9,5 +9,11 @@
     <PackageReference Include="Ocelot" Version="13.8.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="ocelotconfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 
 </Project>

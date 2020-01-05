@@ -41,8 +41,16 @@ namespace DncIds4.ApiGatewayOcelot
                     opts.ApiSecret = this.IdentityServerConfig.ClientSecret;
                     opts.SupportedTokens = SupportedTokens.Both;
                 });
-            services.AddOcelot();
-            services.AddCors();
+            services.AddOcelot(this.Configuration);
+            services.AddCors(opts =>
+            {
+                opts.AddDefaultPolicy(cfg =>
+                {
+                    cfg.AllowAnyHeader();
+                    cfg.AllowAnyOrigin();
+                    cfg.AllowAnyMethod();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,13 +61,7 @@ namespace DncIds4.ApiGatewayOcelot
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(builder =>
-            {
-                builder.AllowAnyOrigin();
-                builder.AllowAnyHeader();
-                builder.AllowAnyMethod();
-                builder.AllowCredentials();
-            });
+            app.UseCors();
 
             app.UseRouting();
 
