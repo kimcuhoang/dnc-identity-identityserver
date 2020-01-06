@@ -56,7 +56,8 @@ namespace DncIds4.IdentityServer.Data
                 {
                     ClientId = "ResourceApi_Swagger",
                     AllowAccessTokensViaBrowser = true,
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    AlwaysSendClientClaims = true,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     ClientSecrets =
                     {
                         new Secret("secret".Sha256())
@@ -65,7 +66,10 @@ namespace DncIds4.IdentityServer.Data
                     AllowedScopes = {
                         ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.ResourceApi]
                     },
-                    //AllowedCorsOrigins = {"http://localhost:5002"}
+                    Claims =
+                    {
+                        new Claim(Constants.IdentityResource.UserRoles, ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.Admin])
+                    }
                 },
                 new Client
                 {
@@ -87,13 +91,20 @@ namespace DncIds4.IdentityServer.Data
                 new Client
                 {
                     ClientId = "Ocelot",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AllowAccessTokensViaBrowser = true,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     ClientSecrets =
                     {
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = {
+                        ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.ResourceApi],
+                        ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.AccountApi],
                         ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.Ocelot]
+                    },
+                    Claims =
+                    {
+                        new Claim(Constants.IdentityResource.UserRoles, ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.Admin])
                     }
                 }
             };

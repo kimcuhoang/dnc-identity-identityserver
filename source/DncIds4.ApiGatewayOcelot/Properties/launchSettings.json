@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "weather",
+      "launchUrl": "protected-api/weather/ping",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

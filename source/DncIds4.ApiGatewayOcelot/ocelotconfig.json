@@ -10,36 +10,20 @@
           "Port": 5002
         }
       ],
-      "UpstreamPathTemplate": "/protected-api/weather",
+      "Priority": 0,
+      "ReRouteIsCaseSensitive": false,
+      "UpstreamPathTemplate": "/protected-api/weather/{everything}",
       "UpstreamHttpMethod": [
         "Get"
-      ]
-    },
-    {
-      // protected-api
-      "DownstreamPathTemplate": "/swagger/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5002
-        }
       ],
-      "UpstreamPathTemplate": "/protected-api/swagger/{everything}",
-      "Config": [
-        {
-          "Name": "ProtectedApi",
-          "Version": "V1",
-          "Url": "http://localhost:5002/swagger/V1/swagger.json" 
-        }
-      ]
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Ocelot",
+        "AllowedScopes": [ "ResourceApi" ]
+      }
     }
   ],
-  "AuthenticationOptions": {
-    "AuthenticationProviderKey": "TestKey",
-    "AllowedScopes": []
-  },
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5003"
+    "BaseUrl": "http://localhost:5003",
+    "RequestIdKey": "OcRequestId"
   }
-  }
+}

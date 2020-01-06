@@ -24,7 +24,10 @@ namespace DncIds4.ProtectedApi.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("ping")]
+        public IActionResult Ping() => Ok("Pong!!!!!");
+
+        [HttpGet("forecast")]
         [Authorize(Policy = "For_Admin")]
         public IEnumerable<WeatherForecast> Get()
         {
