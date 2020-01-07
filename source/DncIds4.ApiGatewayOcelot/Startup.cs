@@ -26,12 +26,12 @@ namespace DncIds4.ApiGatewayOcelot
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication("Ocelot", opts =>
+                .AddAuthentication()
+                .AddIdentityServerAuthentication("ResourceApi", opts =>
                 {
                     opts.Authority = this.IdentityServerConfig.IdentityServerUrl;
                     opts.RequireHttpsMetadata = false;
-                    opts.ApiName = "Ocelot";
+                    opts.ApiName = "ResourceApi";
                     opts.ApiSecret = this.IdentityServerConfig.ClientSecret;
                     opts.SupportedTokens = SupportedTokens.Both;
                 });

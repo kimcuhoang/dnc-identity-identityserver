@@ -87,25 +87,6 @@ namespace DncIds4.IdentityServer.Data
                     {
                         new Claim(Constants.IdentityResource.UserRoles, ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.Admin])
                     }
-                },
-                new Client
-                {
-                    ClientId = "Ocelot",
-                    AllowAccessTokensViaBrowser = true,
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
-                    ClientSecrets =
-                    {
-                        new Secret("secret".Sha256())
-                    },
-                    AllowedScopes = {
-                        ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.ResourceApi],
-                        ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.AccountApi],
-                        ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.Ocelot]
-                    },
-                    Claims =
-                    {
-                        new Claim(Constants.IdentityResource.UserRoles, ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.Admin])
-                    }
                 }
             };
 

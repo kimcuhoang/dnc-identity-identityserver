@@ -15,9 +15,10 @@
       "UpstreamPathTemplate": "/protected-api/weather/{everything}",
       "UpstreamHttpMethod": [
         "Get"
-      ],
+      ]
+      ,
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Ocelot",
+        "AuthenticationProviderKey": "ResourceApi",
         "AllowedScopes": [ "ResourceApi" ]
       }
     }
