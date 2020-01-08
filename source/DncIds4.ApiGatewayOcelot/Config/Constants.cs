@@ -13,5 +13,11 @@
             public const string ApiAdmin = "api::admin";
             public const string ApiUser = "api::user";
         }
+
+        public struct Apis
+        {
+            public const string ResourceApi = "ResourceApi";
+            public const string AccountApi = "AccountApi";
+        }
     }
 }

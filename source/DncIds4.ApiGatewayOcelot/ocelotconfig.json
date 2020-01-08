@@ -1,7 +1,7 @@
 ﻿{
   "ReRoutes": [
     {
-      // protected-api
+      // Protected - Api
       "DownstreamPathTemplate": "/api/WeatherForecast/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -10,17 +10,45 @@
           "Port": 5002
         }
       ],
-      "Priority": 0,
       "ReRouteIsCaseSensitive": false,
       "UpstreamPathTemplate": "/protected-api/weather/{everything}",
-      "UpstreamHttpMethod": [
-        "Get"
-      ]
-      ,
+      "UpstreamHttpMethod": [ "Get" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "ResourceApi",
         "AllowedScopes": [ "ResourceApi" ]
       }
+    },
+    {
+      // Account - Api
+      "DownstreamPathTemplate": "/api/account/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5001
+        }
+      ],
+      "ReRouteIsCaseSensitive": false,
+      "UpstreamPathTemplate": "/account/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "AccountApi",
+        "AllowedScopes": [ "AccountApi" ]
+      }
+    },
+    {
+      // Identity Server - Connect - Api
+      "DownstreamPathTemplate": "/connect/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5001
+        }
+      ],
+      "ReRouteIsCaseSensitive": false,
+      "UpstreamPathTemplate": "/connect/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
     }
   ],
   "GlobalConfiguration": {
