@@ -4,5 +4,21 @@
     "ApiName": "specify per project",
     "ClientId": "specify per project",
     "ClientSecret": "specify per project"
+  },
+  "ServiceConfig": {
+    "serviceDiscoveryAddress": "http://localhost:8500",
+    "serviceName": "specify per project",
+    "host": "localhost",
+    "port": "per service"
+  },
+  "consul": {
+    "enabled": true,
+    "url": "http://localhost:8500",
+    "serviceName": "per service",
+    "hostName": "localhost",
+    "port": 5000,
+    "pingEnabled": true,
+    "pingEndpoint": "ping",
+    "pingInterval": 5 
   }
 }

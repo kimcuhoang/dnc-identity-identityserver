@@ -4,15 +4,13 @@
       // Protected - Api
       "DownstreamPathTemplate": "/api/WeatherForecast/{everything}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5002
-        }
-      ],
+      "ServiceName": "resources",
+      //"LoadBalancerOptions": {
+      //  "Type": "RoundRobin"
+      //},
       "ReRouteIsCaseSensitive": false,
-      "UpstreamPathTemplate": "/protected-api/weather/{everything}",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamPathTemplate": "/weather/{everything}",
+      "UpstreamHttpMethod": [ "GET" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "ResourceApi",
         "AllowedScopes": [ "ResourceApi" ]
@@ -22,15 +20,13 @@
       // Account - Api
       "DownstreamPathTemplate": "/api/account/{everything}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5001
-        }
-      ],
+      "ServiceName": "identity",
+      //"LoadBalancerOptions": {
+      //  "Type": "RoundRobin"
+      //},
       "ReRouteIsCaseSensitive": false,
       "UpstreamPathTemplate": "/account/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "UpstreamHttpMethod": [ "GET", "POST" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "AccountApi",
         "AllowedScopes": [ "AccountApi" ]
@@ -40,19 +36,32 @@
       // Identity Server - Connect - Api
       "DownstreamPathTemplate": "/connect/{everything}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5001
-        }
-      ],
+      "ServiceName": "identity",
+      //"LoadBalancerOptions": {
+      //  "Type": "RoundRobin"
+      //},
       "ReRouteIsCaseSensitive": false,
       "UpstreamPathTemplate": "/connect/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post" ]
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      // Identity Server - Discovery
+      "DownstreamPathTemplate": "/.well-known/{everything}",
+      "DownstreamScheme": "http",
+      "ServiceName": "identity",
+      //"LoadBalancerOptions": {
+      //  "Type": "RoundRobin"
+      //},
+      "ReRouteIsCaseSensitive": false,
+      "UpstreamPathTemplate": "/.well-known/{everything}",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5003",
-    "RequestIdKey": "OcRequestId"
+    "ServiceDiscoveryProvider": {
+      "Host": "localhost",
+      "Port": 8500,
+      "Type": "Consul"
+    }
   }
 }

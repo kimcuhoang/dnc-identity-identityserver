@@ -23,6 +23,7 @@ namespace DncIds4.IdentityServer.Controllers
         }
 
         [HttpGet("ping")]
+        [AllowAnonymous]
         public IActionResult Ping() => Ok("Pong!!!!!!!!!!!!!!!!!!");
 
         [HttpGet("claims")]

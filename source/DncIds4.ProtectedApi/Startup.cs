@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
+using DncIds4.Common.Consul;
 
 namespace DncIds4.ProtectedApi
 {
@@ -25,6 +26,7 @@ namespace DncIds4.ProtectedApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddConsul(this.Configuration);
             services.AddControllers(cfg =>
             {
                 var guestPolicy = new AuthorizationPolicyBuilder()
@@ -113,7 +115,7 @@ namespace DncIds4.ProtectedApi
                 cfg.OAuthClientId(this.IdentityServerConfig.ClientId);
                 cfg.OAuthClientSecret(this.IdentityServerConfig.ClientSecret);
             });
-
+            
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

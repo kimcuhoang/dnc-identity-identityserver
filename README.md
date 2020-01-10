@@ -22,3 +22,8 @@ An example of IdentityServer4 and ASP.NET Identity
 ### ApiGateway with Ocelot on 04 Jan 2020
 - [Building .NET Core API Gateway with Ocelot](https://medium.com/swlh/building-net-core-api-gateway-with-ocelot-6302c2b3ffc5)
 - [Building Microservices On .NET Core – Part 4 Building API Gateways With Ocelot](https://tinyurl.com/qpxx7f5)
+
+### Ocelot + Consul on 08 Jan 2020
+- [Building API Gateway Using Ocelot In ASP.NET Core - Service Discovery (Consul)](https://tinyurl.com/yep45ncq)
+- [API Gateway using .NET Core, Ocelot and Consul](https://tinyurl.com/yenme2t5)
+- [Microservices Service Discovery](https://www.codeproject.com/Articles/1248381/Microservices-Service-Discovery)

@@ -25,6 +25,7 @@ namespace DncIds4.ProtectedApi.Controllers
         }
 
         [HttpGet("ping")]
+        [AllowAnonymous]
         public IActionResult Ping() => Ok("Pong!!!!!");
 
         [HttpGet("forecast")]

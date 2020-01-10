@@ -11,9 +11,13 @@
   <ItemGroup>
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="Ocelot" Version="13.8.0" />
+    <PackageReference Include="Ocelot.Provider.Consul" Version="13.8.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="backup.ocelotconfig.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
     <Content Update="ocelotconfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

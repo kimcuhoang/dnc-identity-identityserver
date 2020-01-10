@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
+using DncIds4.Common.Consul;
 using DncIds4.IdentityServer.Securities.Admin;
 
 namespace DncIds4.IdentityServer
@@ -38,6 +39,7 @@ namespace DncIds4.IdentityServer
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddConsul(this.Configuration);
             services.AddControllers(cfg =>
             {
                 var guestPolicy = new AuthorizationPolicyBuilder()

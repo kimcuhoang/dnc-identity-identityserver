@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Provider.Consul;
 
 namespace DncIds4.ApiGatewayOcelot
 {
@@ -42,7 +43,10 @@ namespace DncIds4.ApiGatewayOcelot
                     opts.SupportedTokens = SupportedTokens.Both;
                 });
 
-            services.AddOcelot();
+            services
+                .AddOcelot(this.Configuration)
+                .AddConsul();
+
             services.AddCors(opts =>
             {
                 opts.AddDefaultPolicy(cfg =>
