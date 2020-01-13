@@ -46,6 +46,7 @@ namespace DncIds4.IdentityServer.Data
                         Constants.IdentityResource.UserScopes
                     }
                 },
+                new ApiResource(ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.Ocelot], "Ocelot"),
             };
 
         public static IEnumerable<Client> Clients => 
@@ -55,7 +56,8 @@ namespace DncIds4.IdentityServer.Data
                 {
                     ClientId = "ResourceApi_Swagger",
                     AllowAccessTokensViaBrowser = true,
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    AlwaysSendClientClaims = true,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     ClientSecrets =
                     {
                         new Secret("secret".Sha256())
@@ -64,7 +66,10 @@ namespace DncIds4.IdentityServer.Data
                     AllowedScopes = {
                         ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.ResourceApi]
                     },
-                    //AllowedCorsOrigins = {"http://localhost:5002"}
+                    Claims =
+                    {
+                        new Claim(Constants.IdentityResource.UserRoles, ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.Admin])
+                    }
                 },
                 new Client
                 {

@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
+using DncIds4.Common.Consul;
+using DncIds4.Common.IS4;
+using DncIds4.Common.IS4.Extensions;
 
 namespace DncIds4.ProtectedApi
 {
@@ -16,7 +19,7 @@ namespace DncIds4.ProtectedApi
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            this.IdentityServerConfig = this.Configuration.GetSection("IdentityServerConfig").Get<IdentityServerConfig>();
+            this.IdentityServerConfig = this.Configuration.GetIdentityServerConfig();
         }
 
         public IConfiguration Configuration { get; }
@@ -25,6 +28,10 @@ namespace DncIds4.ProtectedApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services
+                .AddConsul(this.Configuration)
+                .AddIdentityServer4(this.Configuration);
+
             services.AddControllers(cfg =>
             {
                 var guestPolicy = new AuthorizationPolicyBuilder()
@@ -34,16 +41,6 @@ namespace DncIds4.ProtectedApi
                     .Build();
                 cfg.Filters.Add(new AuthorizeFilter(guestPolicy));
             });
-
-            services
-                .AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication(opts =>
-                {
-                    opts.Authority = this.IdentityServerConfig.IdentityServerUrl;
-                    opts.RequireHttpsMetadata = false;
-                    opts.ApiName = this.IdentityServerConfig.ApiName;
-                    opts.ApiSecret = this.IdentityServerConfig.ClientSecret;
-                });
 
             services.AddAuthorization(opts =>
             {
@@ -113,7 +110,7 @@ namespace DncIds4.ProtectedApi
                 cfg.OAuthClientId(this.IdentityServerConfig.ClientId);
                 cfg.OAuthClientSecret(this.IdentityServerConfig.ClientSecret);
             });
-
+            
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

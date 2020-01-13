@@ -1,0 +1,67 @@
+﻿{
+  "ReRoutes": [
+    {
+      // Protected - Api
+      "DownstreamPathTemplate": "/api/WeatherForecast/{everything}",
+      "DownstreamScheme": "http",
+      "ServiceName": "resources",
+      //"LoadBalancerOptions": {
+      //  "Type": "RoundRobin"
+      //},
+      "ReRouteIsCaseSensitive": false,
+      "UpstreamPathTemplate": "/weather/{everything}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ResourceApi",
+        "AllowedScopes": [ "ResourceApi" ]
+      }
+    },
+    {
+      // Account - Api
+      "DownstreamPathTemplate": "/api/account/{everything}",
+      "DownstreamScheme": "http",
+      "ServiceName": "identity",
+      //"LoadBalancerOptions": {
+      //  "Type": "RoundRobin"
+      //},
+      "ReRouteIsCaseSensitive": false,
+      "UpstreamPathTemplate": "/account/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "AccountApi",
+        "AllowedScopes": [ "AccountApi" ]
+      }
+    },
+    {
+      // Identity Server - Connect - Api
+      "DownstreamPathTemplate": "/connect/{everything}",
+      "DownstreamScheme": "http",
+      "ServiceName": "identity",
+      //"LoadBalancerOptions": {
+      //  "Type": "RoundRobin"
+      //},
+      "ReRouteIsCaseSensitive": false,
+      "UpstreamPathTemplate": "/connect/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      // Identity Server - Discovery
+      "DownstreamPathTemplate": "/.well-known/{everything}",
+      "DownstreamScheme": "http",
+      "ServiceName": "identity",
+      //"LoadBalancerOptions": {
+      //  "Type": "RoundRobin"
+      //},
+      "ReRouteIsCaseSensitive": false,
+      "UpstreamPathTemplate": "/.well-known/{everything}",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": {
+      "Host": "localhost",
+      "Port": 8500,
+      "Type": "Consul"
+    }
+  }
+}

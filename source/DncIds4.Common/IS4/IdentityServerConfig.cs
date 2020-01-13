@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DncIds4.ProtectedApi.Config
+﻿namespace DncIds4.Common.IS4
 {
     public class IdentityServerConfig
     {
