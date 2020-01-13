@@ -1,8 +1,11 @@
+using DncIds4.Common.Consul;
+using DncIds4.Common.IS4;
+using DncIds4.Common.IS4.Extensions;
 using DncIds4.IdentityServer.Config;
 using DncIds4.IdentityServer.Data;
+using DncIds4.IdentityServer.Securities.Admin;
 using DncIds4.IdentityServer.Services;
 using DncIds4.IdentityServer.StartupTasks;
-using IdentityServer4.AccessTokenValidation;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -16,8 +19,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
-using DncIds4.Common.Consul;
-using DncIds4.IdentityServer.Securities.Admin;
+using IdentityServer4.AccessTokenValidation;
 
 namespace DncIds4.IdentityServer
 {
@@ -28,7 +30,7 @@ namespace DncIds4.IdentityServer
             Configuration = configuration;
             this.ConnectionString = this.Configuration.GetConnectionString("Default");
             this.MigrationAssembly = this.GetType().Assembly.GetName().Name;
-            this.IdentityServerConfig = this.Configuration.GetSection("IdentityServerConfig").Get<IdentityServerConfig>();
+            this.IdentityServerConfig = this.Configuration.GetIdentityServerConfig();
         }
 
         private string ConnectionString { get; }
@@ -39,7 +41,10 @@ namespace DncIds4.IdentityServer
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddConsul(this.Configuration);
+            services
+                .AddConsul(this.Configuration)
+                .AddIdentityServer4(this.Configuration);
+
             services.AddControllers(cfg =>
             {
                 var guestPolicy = new AuthorizationPolicyBuilder()
@@ -49,16 +54,6 @@ namespace DncIds4.IdentityServer
                     .Build();
                 cfg.Filters.Add(new AuthorizeFilter(guestPolicy));
             });
-
-            services
-                .AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication(opts =>
-                {
-                    opts.Authority = this.IdentityServerConfig.IdentityServerUrl;
-                    opts.RequireHttpsMetadata = false;
-                    opts.ApiName = this.IdentityServerConfig.ApiName;
-                    opts.ApiSecret = this.IdentityServerConfig.ClientSecret;
-                });
 
             services.AddAuthorization(opts =>
             {

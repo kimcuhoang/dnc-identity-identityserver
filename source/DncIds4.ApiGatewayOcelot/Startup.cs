@@ -1,4 +1,6 @@
 using DncIds4.ApiGatewayOcelot.Config;
+using DncIds4.Common.IS4;
+using DncIds4.Common.IS4.Extensions;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,7 +18,7 @@ namespace DncIds4.ApiGatewayOcelot
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            this.IdentityServerConfig = this.Configuration.GetSection("IdentityServerConfig").Get<IdentityServerConfig>();
+            this.IdentityServerConfig = this.Configuration.GetIdentityServerConfig();
         }
 
         public IConfiguration Configuration { get; }
