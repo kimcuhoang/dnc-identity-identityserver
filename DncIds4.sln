@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__", "__", "{0E807C77-A67A-
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		README.md = README.md
+		Resources.md = Resources.md
 		sharedSettings.json = sharedSettings.json
 	EndProjectSection
 EndProject
@@ -16,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DncIds4.ProtectedApi", "sou
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DncIds4.ApiGatewayOcelot", "source\DncIds4.ApiGatewayOcelot\DncIds4.ApiGatewayOcelot.csproj", "{4266FB0F-4448-4942-9C44-69E8B55B6048}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DncIds4.Common", "source\DncIds4.Common\DncIds4.Common.csproj", "{0D4FCE69-6F8C-4FE3-8378-658AD96FDAB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DncIds4.Common", "source\DncIds4.Common\DncIds4.Common.csproj", "{0D4FCE69-6F8C-4FE3-8378-658AD96FDAB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
