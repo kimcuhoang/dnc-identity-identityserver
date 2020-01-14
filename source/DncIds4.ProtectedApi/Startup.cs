@@ -30,7 +30,7 @@ namespace DncIds4.ProtectedApi
         {
             services
                 .AddConsul(this.Configuration)
-                .AddIdentityServer4(this.Configuration);
+                .AddIdentityServer4(this.IdentityServerConfig);
 
             services.AddControllers(cfg =>
             {

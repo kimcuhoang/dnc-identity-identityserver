@@ -8,20 +8,16 @@ namespace DncIds4.Common.IS4
 {
     public static class IdentityServerRegistration
     {
-        public static IServiceCollection AddIdentityServer4(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddIdentityServer4(this IServiceCollection services, IdentityServerConfig identityServerConfig)
         {
-            var is4Config = configuration.GetIdentityServerConfig();
-
-            services.AddSingleton(is4Config);
-
             services
                 .AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(opts =>
                 {
-                    opts.Authority = is4Config.IdentityServerUrl;
+                    opts.Authority = identityServerConfig.IdentityServerUrl;
                     opts.RequireHttpsMetadata = false;
-                    opts.ApiName = is4Config.ApiName;
-                    opts.ApiSecret = is4Config.ClientSecret;
+                    opts.ApiName = identityServerConfig.ApiName;
+                    opts.ApiSecret = identityServerConfig.ClientSecret;
                 });
 
             return services;

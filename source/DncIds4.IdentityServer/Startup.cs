@@ -43,13 +43,12 @@ namespace DncIds4.IdentityServer
         {
             services
                 .AddConsul(this.Configuration)
-                .AddIdentityServer4(this.Configuration);
+                .AddIdentityServer4(this.IdentityServerConfig);
 
             services.AddControllers(cfg =>
             {
-                var guestPolicy = new AuthorizationPolicyBuilder()
+                var guestPolicy = new AuthorizationPolicyBuilder(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                     .RequireAuthenticatedUser()
-                    .AddAuthenticationSchemes(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                     .RequireClaim("scope", this.IdentityServerConfig.ApiName)
                     .Build();
                 cfg.Filters.Add(new AuthorizeFilter(guestPolicy));
@@ -68,7 +67,6 @@ namespace DncIds4.IdentityServer
 
                 opts.AddPolicy("For_User", policy =>
                 {
-                    policy.AddAuthenticationSchemes(IdentityServerAuthenticationDefaults.AuthenticationScheme);
                     policy.RequireAssertion(context =>
                         context.User.HasClaim(x => (x.Type == Constants.IdentityResource.UserRoles || x.Type == $"client_{Constants.IdentityResource.UserRoles}")
                                                    && x.Value == ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.User]));
