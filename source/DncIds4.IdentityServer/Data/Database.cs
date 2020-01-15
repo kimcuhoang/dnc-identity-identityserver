@@ -3,6 +3,7 @@ using IdentityServer4.Models;
 using IdentityServer4.Test;
 using System.Collections.Generic;
 using System.Security.Claims;
+using IdentityServer4;
 
 namespace DncIds4.IdentityServer.Data
 {
@@ -34,8 +35,7 @@ namespace DncIds4.IdentityServer.Data
                         Constants.IdentityResource.UserScopes
                     }
                 },
-                new ApiResource(ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.AccountApi], "The API for account management")
-                {
+                new ApiResource(IdentityServerConstants.LocalApi.ScopeName, "Identity Server Api"){
                     ApiSecrets =
                     {
                         new Secret("secret".Sha256())
@@ -46,7 +46,6 @@ namespace DncIds4.IdentityServer.Data
                         Constants.IdentityResource.UserScopes
                     }
                 },
-                new ApiResource(ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.Ocelot], "Ocelot"),
             };
 
         public static IEnumerable<Client> Clients => 
@@ -54,7 +53,7 @@ namespace DncIds4.IdentityServer.Data
             {
                 new Client
                 {
-                    ClientId = "ResourceApi_Swagger",
+                    ClientId = ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.ResourceApi],
                     AllowAccessTokensViaBrowser = true,
                     AlwaysSendClientClaims = true,
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
@@ -73,7 +72,7 @@ namespace DncIds4.IdentityServer.Data
                 },
                 new Client
                 {
-                    ClientId = "AccountApi_Swagger",
+                    ClientId = ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.IdentityServerApi],
                     AllowAccessTokensViaBrowser = true,
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets =
@@ -81,7 +80,7 @@ namespace DncIds4.IdentityServer.Data
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = {
-                        ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.AccountApi]
+                        ApiResourceDefinition.ApiResources[ApiResourceDefinition.Apis.IdentityServerApi]
                     },
                     Claims =
                     {
