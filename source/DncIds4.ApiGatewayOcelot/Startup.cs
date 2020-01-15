@@ -33,15 +33,15 @@ namespace DncIds4.ApiGatewayOcelot
                     opts.Authority = this.IdentityServerConfig.IdentityServerUrl;
                     opts.RequireHttpsMetadata = false;
                     opts.ApiName = Constants.Apis.ResourceApi;
-                    opts.ApiSecret = this.IdentityServerConfig.ClientSecret;
+                    opts.ApiSecret = "secret";
                     opts.SupportedTokens = SupportedTokens.Both;
                 })
-                .AddIdentityServerAuthentication(Constants.Apis.AccountApi, opts =>
+                .AddIdentityServerAuthentication(Constants.Apis.IdentityServerApi, opts =>
                 {
                     opts.Authority = this.IdentityServerConfig.IdentityServerUrl;
                     opts.RequireHttpsMetadata = false;
-                    opts.ApiName = Constants.Apis.AccountApi;
-                    opts.ApiSecret = this.IdentityServerConfig.ClientSecret;
+                    opts.ApiName = Constants.Apis.IdentityServerApi;
+                    opts.ApiSecret = "secret";
                     opts.SupportedTokens = SupportedTokens.Both;
                 });
 

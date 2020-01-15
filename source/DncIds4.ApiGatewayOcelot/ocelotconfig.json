@@ -28,8 +28,8 @@
       "UpstreamPathTemplate": "/account/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST" ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "AccountApi",
-        "AllowedScopes": [ "AccountApi" ]
+        "AuthenticationProviderKey": "IdentityServerApi",
+        "AllowedScopes": [ "IdentityServerApi" ]
       }
     },
     {

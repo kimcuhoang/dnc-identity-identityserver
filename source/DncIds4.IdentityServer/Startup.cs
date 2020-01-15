@@ -19,6 +19,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
+using IdentityServer4;
 using IdentityServer4.AccessTokenValidation;
 
 namespace DncIds4.IdentityServer
@@ -45,11 +46,14 @@ namespace DncIds4.IdentityServer
                 .AddConsul(this.Configuration)
                 .AddIdentityServer4(this.IdentityServerConfig);
 
+            //http://docs.identityserver.io/en/latest/topics/add_apis.html
+            services.AddLocalApiAuthentication();
+
             services.AddControllers(cfg =>
             {
-                var guestPolicy = new AuthorizationPolicyBuilder(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                var guestPolicy = new AuthorizationPolicyBuilder(IdentityServerConstants.LocalApi.AuthenticationScheme)
                     .RequireAuthenticatedUser()
-                    .RequireClaim("scope", this.IdentityServerConfig.ApiName)
+                    .RequireClaim("scope", IdentityServerConstants.LocalApi.ScopeName)
                     .Build();
                 cfg.Filters.Add(new AuthorizeFilter(guestPolicy));
             });
@@ -58,15 +62,15 @@ namespace DncIds4.IdentityServer
             {
                 opts.AddPolicy("For_Admin", policy =>
                 {
-                    policy.AddAuthenticationSchemes(IdentityServerAuthenticationDefaults.AuthenticationScheme);
-                    policy.RequireClaim("scope", this.IdentityServerConfig.ApiName);
-                    policy.RequireClaim("iss", this.IdentityServerConfig.IdentityServerUrl);
+                    policy.AddAuthenticationSchemes(IdentityServerConstants.LocalApi.AuthenticationScheme);
+                    policy.RequireClaim("scope", IdentityServerConstants.LocalApi.ScopeName);
                     policy.AddRequirements(
                         new IsAdminRequirement(ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.Admin]));
                 });
 
                 opts.AddPolicy("For_User", policy =>
                 {
+                    policy.AddAuthenticationSchemes(IdentityServerConstants.LocalApi.AuthenticationScheme);
                     policy.RequireAssertion(context =>
                         context.User.HasClaim(x => (x.Type == Constants.IdentityResource.UserRoles || x.Type == $"client_{Constants.IdentityResource.UserRoles}")
                                                    && x.Value == ApiRoleDefinition.ApiRoles[ApiRoleDefinition.Roles.User]));
